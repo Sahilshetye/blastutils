@@ -1,15 +1,15 @@
-# blast.js
+# blastutils
 [![Build Status](https://travis-ci.org/TeamMacLean/blastjs.svg?branch=master)](https://travis-ci.org/TeamMacLean/blastjs)
->a BLAST+ wrapper for Node.js
+>a BLAST+ wrapper(inspired from blastjs) for Node.js
 
-a demo can be found at [github.com/teammaclean/blastjs-demo](https://github.com/teammaclean/blastjs-demo)
+a demo can be found at [github.com/sahilshetye/blastutils](https://github.com/sahilshetye/blastutils)
 
 ## Install
 
 If you do not have Node.js installed you can get it at [https://nodejs.org](https://nodejs.org)
 
 ```bash
-npm install blastjs
+npm install blastutils
 ```
 
 If Blast+ is not installed you can run:    
@@ -22,7 +22,7 @@ and the latest version of Blast+ will be downloaded and placed in the bin folder
 ### make database
 
 ```javascript
-var blast = require('blastjs');
+var blast = require('blastutils');
 
 var type = 'nucl';
 var fileIn = './test.fasta';
@@ -41,7 +41,7 @@ blast.makeDB(type, fileIn, outPath, name, function(err){
 
 ### blast n
 ```javascript
-var blast = require('blastjs');
+var blast = require('blastutils');
 
 blast.outputString(true); //optional, provides string output instead of JSON
 
