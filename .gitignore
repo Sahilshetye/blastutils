@@ -7,5 +7,3 @@ index.js
 index.d.ts
 package-lock.json
 test/results/
-/lib/blast.d.ts
-/lib/
