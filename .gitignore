@@ -2,5 +2,10 @@
 node_modules
 bin
 test/testDB.*
-lib
+lib/*.js
 index.js
+index.d.ts
+lib/blast.d.ts
+package-lock.json
+test/results/
+/lib/blast.d.ts

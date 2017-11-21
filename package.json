@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
-    "prepublish": "tsc"
+    "run": "tsc"
   },
   "repository": {
     "type": "git",
