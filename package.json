@@ -1,12 +1,12 @@
 {
   "name": "blastutils",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "a blast+ wrapper(inspired from blastjs)",
   "homepage": "https://github.com/sahilshetye/blastutils",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
-
+    "test": "./node_modules/mocha/bin/mocha",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "download": "^4.2.0",
+    "fastautil": "^1.1.0",
     "ftp": "^0.3.10",
     "lodash": "^4.16.6",
     "tar.gz": "1.0.2",

@@ -1,90 +1,39 @@
+///<reference types="../../node_modules/fastautil/bin/index" />
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
 var _ = require('lodash');
 var uuid = require('uuid');
 var parseString = require('xml2js').parsestring;
+var fastautil= require('fastautil');
 
 export class blast{
     static stringOutput:Boolean=false;
-    static customBlastLocation:string=null;
-
-
-    blast(options:option, cb) {
-        var nonBlastOptions = ['type', 'outputDirectory', 'rawOutput'];
-        var optArr:Array<String> = [];
-        var guid = uuid.v1();
-        var queryString;
-        var opts:option = {
-            type: 'blastn',
-            outputDirectory: '/tmp',
-            rawOutput: false,
-            db: 'nt',
-            outfmt: 5
-        };
-
-        //overiding the  old options default..
-        _.merge(opts, options);
-
-        queryString = opts.query;
-
-        if (!queryString) {
-            return cb(new Error('Query must be supplied.'));
-        }
-
-        opts.query = path.join(opts.outputDirectory, guid + '.fasta');
-        opts.out = path.join(opts.outputDirectory, guid + '.out');
-
-        if(opts.remote) {
-            opts.remote = '';
-        }
-
-        _.each(opts, function(value, key) {
-            if(nonBlastOptions.indexOf(key) > -1){
-                return;
-            }
-
-            optArr.push('-' + key);
-            optArr.push(value);
-        });
-
-        fs.writeFile(opts.query, queryString, function(err) {
-            if (err) {
-                return cb(err);
-            }
-
-            run(opts.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
-                postBlast(err, stdOut, stdError, opts, cb);
-            });
-
-        });
-        cb();
-    };
-
+    static customBlastLocation:string="";
 
 
     outputString(bool:Boolean) {
         blast.stringOutput = !!(!bool || bool == true);
     };
 
-    blastN (db, query, cb) {
-        blaster('blastn', db, query, cb);
+    blastN (db, query, op:option,cb) {
+        blaster('blastn', db, query,op, cb);
     };
 
-    blastP (db, query, cb) {
-        blaster('blastp', db, query, cb);
+    blastP (db, query,op:option, cb) {
+        blaster('blastp', db, query,op, cb);
     };
 
-    blastX (db, query, cb) {
-        blaster('blastx', db, query, cb);
+    blastX (db, query,op:option, cb) {
+        blaster('blastx', db, query,op, cb);
     };
 
-    tblastN (db, query, cb) {
-        blaster('tblastn', db, query, cb);
+    tblastN (db, query,op:option, cb) {
+        blaster('tblastn', db, query,op, cb);
     };
 
-    tblastX (db, query, cb) {
-        blaster('tblastx', db, query, cb);
+    tblastX (db, query,op:option, cb) {
+        blaster('tblastx', db, query,op, cb);
     };
 
     //overiding the  old options default..
@@ -93,7 +42,7 @@ export class blast{
     makeDB(type, fileIn, outPath, name, cb) {
 
         if (!type) {
-            return cb(new Error('no type supplied'));
+            return cb(new Error('no dbtype supplied'));
         }
         if (!fileIn) {
             return cb(new Error('no file supplied'));
@@ -112,11 +61,28 @@ export class blast{
         var fileOut = outPath + filename;
 
         var makeCommand = 'makeblastdb -in ' + fileIn + ' -dbtype ' + type + ' -out ' + fileOut + ' -title ' + name;
-        run(makeCommand, function(err, stdOut, stdErr) {
+        run(makeCommand, (err, stdOut, stdErr) => {
             return cb(err, stdOut, stdErr, fileOut);
         });
         cb();
     };
+
+    blastDbAlias(option:AliasOption,cb){
+
+        var op= new AliasOption();
+         _.merge(op,option);
+        // op.dblist=option.dblist;
+    console.log(option.dbtype);
+        var makeCommand=' blastdb_aliastool -dblist "'+op.dblist+'" -dbtype '+op.dbtype+' -out '+option.out+' -title '+option.title;
+
+        var fileOut = option.out;
+        run(makeCommand, (err, stdOut, stdErr) => {
+            return cb(err, stdOut, stdErr, fileOut);
+        });
+
+
+
+    }
 
 }
 
@@ -144,7 +110,7 @@ export function lookupCustomBlastLocation() {
 
 }
 
-export function postBlast(err, stdOut, stdError, options, cb) {
+export function postBlast(err, stdOut, stdError, options:option, cb) {
     var outFile = options.out;
     var isRaw = options.rawOutput || blast.stringOutput || !options.outfmt.toString().match(/^(.)?5/);
 
@@ -152,32 +118,64 @@ export function postBlast(err, stdOut, stdError, options, cb) {
         return cb(err);
     }
 
-    fs.readFile(outFile, 'utf8', function(err, data) {
+    fs.readFile(outFile, 'utf8', (err, data)=> {
         if(isRaw){
             return cb(null, data);
         }
 
-        parseString(data, function(err, result) {
+        parseString(data, (err, result) => {
             return cb(null, result);
         });
     });
+
 }
 
-export function blaster(type, db, query, cb) {
-    var pathW = '/tmp/' + Date.now() + '.fasta';
-    fs.writeFileSync(pathW, query);
+export function blaster(type, db, query,op:option, cb) {
 
-    var outPath = '/tmp/';
-    var outFile = outPath + uuid.v1() + '.out';
-    var blastCommand = type + ' -query ' + pathW + ' -out ' + outFile + ' -db ' + db;
+    var nonBlastOptions = ['type', 'outputDirectory', 'rawOutput','inputfileformat','outputfileformat'];
+    var optArr:Array<string> = [];
+    var guid = uuid.v1();
+    var queryString;
+    var opts= new option();
 
-    if (!blast.stringOutput) {
-        blastCommand += ' -outfmt 5';
+    //overiding the  old options default..
+     _.merge(opts, op);
+
+    queryString = query;
+
+    if (!queryString) {
+        return cb(new Error('Query must be supplied.'));
     }
 
-    run(blastCommand, function(err, stdOut, stdError) {
-        postBlast(err, stdOut, stdError, {out: outFile, outfmt: 5},  cb);
+    query = path.join(opts.outputDirectory, guid + '.'+opts.inputfileformat);
+    op.out = path.join(opts.outputDirectory, guid + '.'+opts.outputfileformat);
+
+    op.query=query;
+
+    if(opts.remote) {
+        opts.remote = '';
+    }
+
+    _.each(op, function(value, key) {
+        if(nonBlastOptions.indexOf(key) > -1 || value===false){
+            return;
+        }
+    //console.log("Key,Value=> "+key+" "+value);
+        optArr.push('-' + key);
+        optArr.push(value);
     });
+
+    fs.writeFile(query, queryString, function(err) {
+        if (err) {
+            return cb(err);
+        }
+        run(op.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
+            postBlast(err, stdOut, stdError, op, cb);
+        });
+
+    });
+
+
 }
 
 export function run(toRun:String, cb){
@@ -189,19 +187,52 @@ export function run(toRun:String, cb){
     exec(toRun, cb);
 }
 
-export interface option{
 
-    type: 'blastn',
-    outputDirectory: '/tmp',
-    rawOutput: false,
-    db: 'nt',
-    outfmt: 5,
-    remote?:String,
-    query?:String,
-    out?:String
+export class option implements IOption{
+
+    type:string="blastn";
+    outputDirectory:string="/tmp" ;
+    rawOutput: boolean=false;
+    db: string|boolean="testDB";
+    outfmt: number=13;
+    remote?:boolean |string=false ;
+    out:string="";
+    inputfileformat:string="fasta";
+    outputfileformat:string="html";
+    query:string="";
+
+}
+export interface IOption{
+
+    type?:string|boolean;
+    outputDirectory:String ;
+    rawOutput:boolean;
+    db: string|boolean;
+    outfmt: number;
+    remote?:boolean |string ;
+    out?:string;
+    inputfileformat:string;
+    outputfileformat:string;
+    query:string;
+
 
 }
 
+export class AliasOption implements IAliasOption{
+    dblist:Array<string>=[];
+    dbtype:string="nucl";
+    out:string="";
+    title:string="testAliasDB";
+    directory:string=__dirname;
+}
+
+export interface IAliasOption{
+    dblist:Array<string>;
+    dbtype:string;
+    out:string;
+    title:string;
+    directory:string;
+}
 
 
 
