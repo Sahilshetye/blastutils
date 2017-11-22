@@ -3,6 +3,7 @@ node_js:
     - 'stable'
     - '8'
     - '6'
+sudo: true
 
 before_script:
   - node util/getBlast.js
