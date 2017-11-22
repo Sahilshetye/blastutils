@@ -1,5 +1,5 @@
 # blastutils
-[![Build Status](https://travis-ci.org/TeamMacLean/blastjs.svg?branch=master)](https://travis-ci.org/TeamMacLean/blastjs)
+[![Build Status](https://travis-ci.org/Sahilshetye/blastutils.svg?branch=master)](https://travis-ci.org/TeamMacLean/blastjs)
 >a BLAST+ wrapper(inspired from blastjs) for Node.js
 
 This  version of blastjs is rewritten in ts for better  scalability.

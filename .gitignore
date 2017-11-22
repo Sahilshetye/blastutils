@@ -1,9 +1,8 @@
 .idea
 node_modules
 bin
-test/testDB.*
-lib
-index.js
-index.d.ts
-package-lock.json
-test/results/
+
+
+
+
+

@@ -73,7 +73,7 @@ export class blast{
          _.merge(op,option);
         // op.dblist=option.dblist;
     console.log(option.dbtype);
-        var makeCommand=' blastdb_aliastool -dblist "'+op.dblist+'" -dbtype '+op.dbtype+' -out '+option.out+' -title '+option.title;
+        var makeCommand=' blastdb_aliastool -dblist "'+op.dblist.join(" ")+'" -dbtype '+op.dbtype+' -out '+option.out+' -title '+option.title;
 
         var fileOut = option.out;
         run(makeCommand, (err, stdOut, stdErr) => {

@@ -40,8 +40,8 @@ TACTGGAAAGTGCGGCTGGATCACCTCCTT`;
 var dbPath = path.join(__dirname + '/example');
 var option={
     type:"blastn",
-    outputDirectory:__dirname + "/results/" ,
-    rawOutput:true,
+    outputDirectory:path.join(__dirname ,"/results/") ,
+    rawOutput:false,
     db:path.join(__dirname + '/example'),
     outfmt:12,
     query:Nquery,
@@ -59,6 +59,19 @@ var Alias={
 
 describe('blast', function () {
     this.timeout(15000);
+    describe('#makeDB', function () {
+        it('should not get an error', function (done) {
+            var fileIn = path.join(__dirname + '/example.fasta');
+            var outPath = __dirname;
+            var name = 'testDB';
+            blast.outputString(true);
+            blast.makeDB('nucl', fileIn, outPath, name, function (err, stdOut, stdErr, fileOut) {
+                //console.error('err',err);
+                assert.equal(err, null);
+                done();
+            })
+        });
+    });
     describe('#blastN', function () {
         it('should not get an error', function (done) {
             blast.outputString(true);
@@ -71,19 +84,7 @@ describe('blast', function () {
             });
         });
     });
-    describe('#makeDB', function () {
-        it('should not get an error', function (done) {
-            var fileIn = path.join(__dirname + '/example.fasta');
-            var outPath = __dirname;
-            var name = 'testDB';
-            blast.outputString();
-            blast.makeDB('nucl', fileIn, outPath, name, function (err, stdOut, stdErr, fileOut) {
-                //console.error('err',err);
-                assert.equal(err, null);
-                done();
-            })
-        });
-    });
+
 
     describe('#blastP', function () {
         it('should not get an error', function (done) {
