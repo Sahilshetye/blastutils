@@ -6,7 +6,9 @@ node_js:
 
 before_script:
   - node util/getBlast.js
+  - npm install -g typescript --save-dev
   - npm run build
+  - npm uninstall typescript
 
 script:
   - npm run test
