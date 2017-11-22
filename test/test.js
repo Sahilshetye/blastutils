@@ -68,8 +68,9 @@ describe('blast', function () {
             blast.makeDB('prot', fileIn, outPath, name, function (err, stdOut, stdErr, fileOut) {
                 //console.error('err',err);
                 assert.equal(err, null);
-                done();
+
             })
+            done();
         });
     });
     describe('#blastN', function () {
@@ -80,8 +81,9 @@ describe('blast', function () {
                 console.log(output);
 
                 assert.equal(err, null);
-                done();
+
             });
+            done();
         });
     });
 
@@ -94,8 +96,9 @@ describe('blast', function () {
                 console.log(output);
 
                 assert.equal(err, null);
-                done();
+
             });
+            done();
         });
     });
     describe('#blastX', function () {
@@ -107,8 +110,9 @@ describe('blast', function () {
 
                 assert.equal(err, null);
                 // console.log("Console is: "+output);
-                done();
+
             });
+            done();
         });
     });
     describe('#tblastP', function () {
@@ -119,8 +123,9 @@ describe('blast', function () {
                 assert.equal(err, null);
 
 
-                done();
+
             });
+            done();
         });
     });
     describe('#tblastx', function () {
@@ -131,32 +136,30 @@ describe('blast', function () {
             blast.tblastX(dbPath, Nquery,option, function (err, output) {
                 assert.equal(err, null);
                 console.log(output);
-                done();
+
 
             });
+            done();
         });
     });
 
     describe('blastdb_aliastool', function () {
         it('new Blast alias is created', function (done) {
             blast.outputString(true);
-            option.type="blastx";
 
             blast.makeDB('prot', path.join(__dirname,'/example.fasta'), path.join(__dirname,'/'), "testDB1", function (err, stdOut, stdErr, fileOut) {
-                console.error('err',err);
+                // console.error('err',err);
             });
             blast.makeDB('prot', path.join(__dirname,'/exampleProtein.fasta'), path.join(__dirname,'/'), "testDB2", function (err, stdOut, stdErr, fileOut) {
-                console.error('err',err);
+                // console.error('err',err);
             });
 
             // option.remote=true;
             blast.blastDbAlias(Alias, function (err, stdOut, stdErr, fileOut) {
-                console.log("OP is :"+fileOut);
+                // console.log("OP is :"+fileOut);
                 assert.equal(err, null);
-
-                done();
-
             });
+            done();
         });
     });
 

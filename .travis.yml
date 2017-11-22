@@ -10,9 +10,10 @@ before_script:
   - npm install -g typescript --save-dev
   - npm run build
   - npm uninstall typescript
+  - npm test
 
 script:
-  - npm test
+
 
 branches:
   only:
