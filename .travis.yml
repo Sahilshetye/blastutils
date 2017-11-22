@@ -10,30 +10,6 @@ before_script:
   - npm run build
   - npm uninstall typescript
 
-script:
-  - npm run test
-
-
-deploy:
-  - provider: pages
-    skip_cleanup: true
-    local_dir: docs/
-    github_token: 8c0d0f8a2107b7792f8339501b35f7b3513cb295
-    on:
-      tags: true
-  - provider: releases
-    api_key: $GITHUB_TOKEN
-    file_glob: true
-    file: "{YOURLIB}-*.tgz"
-    skip_cleanup: true
-    on:
-      tags: true
-  - provider: npm
-    skip_cleanup: true
-    email: "sahilshetye2606@gmail.com"
-    api_key: 8c0d0f8a2107b7792f8339501b35f7b3513cb295
-    on:
-      tags: true
 
 branches:
   only:
