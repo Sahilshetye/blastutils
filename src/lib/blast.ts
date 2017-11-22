@@ -72,10 +72,10 @@ export class blast{
         var op= new AliasOption();
          _.merge(op,option);
         // op.dblist=option.dblist;
-    console.log(option.dbtype);
-        var makeCommand=' blastdb_aliastool -dblist "'+op.dblist.join(" ")+'" -dbtype '+op.dbtype+' -out '+option.out+' -title '+option.title;
+    // console.log(option.dbtype);
+        var makeCommand=' blastdb_aliastool -dblist "'+op.dblist.join(" ")+'" -dbtype '+op.dbtype+' -out '+path.join(option.directory,option.out)+' -title '+option.title;
 
-        var fileOut = option.out;
+        var fileOut = option.out+option.title;
         run(makeCommand, (err, stdOut, stdErr) => {
             return cb(err, stdOut, stdErr, fileOut);
         });

@@ -50,7 +50,7 @@ var option={
 }
 var Alias={
     dblist:['example','exampleProtein'],
-    dbtype:"nucl",
+    dbtype:"prot",
     out:"aliasdb",
     title:"aliasdb",
     directory:__dirname
@@ -65,7 +65,7 @@ describe('blast', function () {
             var outPath = __dirname;
             var name = 'testDB';
             blast.outputString(true);
-            blast.makeDB('nucl', fileIn, outPath, name, function (err, stdOut, stdErr, fileOut) {
+            blast.makeDB('prot', fileIn, outPath, name, function (err, stdOut, stdErr, fileOut) {
                 //console.error('err',err);
                 assert.equal(err, null);
                 done();
@@ -142,17 +142,18 @@ describe('blast', function () {
             blast.outputString(true);
             option.type="blastx";
 
-            blast.makeDB('nucl', path.join(__dirname,'/example.fasta'), path.join(__dirname,'/'), "testDB1", function (err, stdOut, stdErr, fileOut) {
+            blast.makeDB('prot', path.join(__dirname,'/example.fasta'), path.join(__dirname,'/'), "testDB1", function (err, stdOut, stdErr, fileOut) {
                 console.error('err',err);
-            })
-            blast.makeDB('nucl', path.join(__dirname,'/exampleProtein.fasta'), path.join(__dirname,'/'), "testDB2", function (err, stdOut, stdErr, fileOut) {
+            });
+            blast.makeDB('prot', path.join(__dirname,'/exampleProtein.fasta'), path.join(__dirname,'/'), "testDB2", function (err, stdOut, stdErr, fileOut) {
                 console.error('err',err);
-            })
+            });
 
             // option.remote=true;
-            blast.blastDbAlias(Alias, function (err, output) {
+            blast.blastDbAlias(Alias, function (err, stdOut, stdErr, fileOut) {
+                console.log("OP is :"+fileOut);
                 assert.equal(err, null);
-                console.log(output);
+
                 done();
 
             });
