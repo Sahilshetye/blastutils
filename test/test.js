@@ -63,7 +63,7 @@ describe('blast', function () {
         it('should not get an error', function (done) {
             var fileIn = path.join(__dirname + '/example.fasta');
             var outPath = __dirname;
-            var name = 'testDB';
+            var name = 'example';
             blast.outputString(true);
             blast.makeDB('prot', fileIn, outPath, name, function (err, stdOut, stdErr, fileOut) {
                 //console.error('err',err);
