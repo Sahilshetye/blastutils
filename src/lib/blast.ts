@@ -5,7 +5,7 @@ var exec = require('child_process').exec;
 var _ = require('lodash');
 var uuid = require('uuid');
 var parseString = require('xml2js').parsestring;
-var fastautil= require('fastautil');
+
 
 export class blast{
     static stringOutput:Boolean=false;
@@ -200,6 +200,8 @@ export class option implements IOption{
     inputfileformat:string="fasta";
     outputfileformat:string="html";
     query:string="";
+    perc_identity=100; //Trying to match the sequence exactly
+    qcov_hsp_perc=100; //Trying to match the sequence exactly
 
 }
 export interface IOption{
@@ -214,6 +216,8 @@ export interface IOption{
     inputfileformat:string;
     outputfileformat:string;
     query:string;
+    perc_identity:number;
+    qcov_hsp_perc:number;
 
 
 }

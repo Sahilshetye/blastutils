@@ -25,6 +25,8 @@ export declare class option implements IOption {
     inputfileformat: string;
     outputfileformat: string;
     query: string;
+    perc_identity: number;
+    qcov_hsp_perc: number;
 }
 export interface IOption {
     type?: string | boolean;
@@ -37,6 +39,8 @@ export interface IOption {
     inputfileformat: string;
     outputfileformat: string;
     query: string;
+    perc_identity: number;
+    qcov_hsp_perc: number;
 }
 export declare class AliasOption implements IAliasOption {
     dblist: Array<string>;
