@@ -46,7 +46,8 @@ var option={
     outfmt:12,
     query:Nquery,
     remote:false,
-    outputfileformat:"json"
+    outputfileformat:"json",
+    rawInput:true
 }
 var Alias={
     dblist:['example','exampleProtein'],
@@ -55,6 +56,18 @@ var Alias={
     title:"aliasdb",
     directory:__dirname
 
+}
+
+var fastaoption={
+    type:"blastn",
+    outputDirectory:path.join(__dirname ,"/results/") ,
+    rawOutput:false,
+    db:path.join(__dirname + '/example'),
+    outfmt:12,
+    query:'/home/LT/shdba/IdeaProjects/blastjs/test/fastatest.fasta',
+    remote:false,
+    outputfileformat:"json",
+    rawInput:false
 }
 
 describe('blast', function () {
@@ -91,7 +104,7 @@ describe('blast', function () {
     describe('#blastP', function () {
         it('should not get an error', function (done) {
             blast.outputString(true);
-            option.type="blastp"
+            option.type="blastp";
             blast.blastP(dbPath, Nquery,option, function (err, output) {
                 console.log(output);
 
@@ -158,6 +171,51 @@ describe('blast', function () {
             blast.blastDbAlias(Alias, function (err, stdOut, stdErr, fileOut) {
                 // console.log("OP is :"+fileOut);
                 assert.equal(err, null);
+            });
+            done();
+        });
+    });
+    describe('#blastNnotRaw', function () {
+        it('should not get an error', function (done) {
+            blast.outputString(true);
+            //fastaoption.type="blastn";
+            //fastaoption.rawInput=false;
+            blast.blastN(dbPath, fastaoption.query,fastaoption, function (err, output) {
+               // console.log(output);
+                //console.log("Answer is : "+fastaoption.rawInput.valueOf);
+
+                assert.equal(err, null);
+
+            });
+            done();
+        });
+    });
+
+    describe('#blastNotVAlidfile', function () {
+        it('should get an error with not valid file', function (done) {
+            blast.outputString(true);
+            //fastaoption.type="blastn";
+            //fastaoption.rawInput=false;            
+            blast.blastN(dbPath, fastaoption.query,fastaoption, function (err, output) {
+                //console.log(output);
+
+                assert.equal(err.message, "outputDirectory is not valid File or File is not found. Pass the absolute path");
+
+            });
+            done();
+        });
+    });
+    describe('#blastNotValidFastaFile', function () {
+        it('should get an error with fasta file not used error', function (done) {
+            blast.outputString(true);
+            //fastaoption.type="blastn";
+            //fastaoption.rawInput=false;            
+            blast.blastN(dbPath, fastaoption.query,fastaoption, function (err, output) {
+               // console.log(output);
+                // console.log(err.message);
+                
+              assert.equal(err.message,"Please  pass a fasta file, Currently only supports only .fasta file" );
+
             });
             done();
         });

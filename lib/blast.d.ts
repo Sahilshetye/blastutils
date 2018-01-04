@@ -27,6 +27,7 @@ export declare class option implements IOption {
     query: string;
     perc_identity: number;
     qcov_hsp_perc: number;
+    rawInput: boolean;
 }
 export interface IOption {
     type?: string | boolean;
@@ -41,6 +42,7 @@ export interface IOption {
     query: string;
     perc_identity: number;
     qcov_hsp_perc: number;
+    rawInput: boolean;
 }
 export declare class AliasOption implements IAliasOption {
     dblist: Array<string>;

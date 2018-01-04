@@ -132,7 +132,7 @@ export function postBlast(err, stdOut, stdError, options:option, cb) {
 
 export function blaster(type, db, query,op:option, cb) {
 
-    var nonBlastOptions = ['type', 'outputDirectory', 'rawOutput','inputfileformat','outputfileformat'];
+    var nonBlastOptions = ['type', 'outputDirectory', 'rawOutput','inputfileformat','outputfileformat','rawInput'];
     var optArr:Array<string> = [];
     var guid = uuid.v1();
     var queryString;
@@ -140,23 +140,35 @@ export function blaster(type, db, query,op:option, cb) {
 
     //overiding the  old options default..
      _.merge(opts, op);
+    opts.rawInput=op.rawInput;
+    
 
-    queryString = query;
-
-    if (!queryString) {
+    if (!query) {
         return cb(new Error('Query must be supplied.'));
     }
-
+    queryString = query;
+    if(opts.rawInput)  
     query = path.join(opts.outputDirectory, guid + '.'+opts.inputfileformat);
-    op.out = path.join(opts.outputDirectory, guid + '.'+opts.outputfileformat);
+    
+     else{
+        // filepath with  correct extension should be passed in the  following  place.
+        // query = opts.outputDirectory;
+        
+    if(!fs.lstatSync(query).isFile())
+    return cb(new Error("outputDirectory is not valid File or File is not found. Pass the absolute path"));
+    if(!query.includes(".fasta"))
+    return cb (new Error("Please  pass a fasta file, Currently only supports only .fasta file"))
+        
+     }
+    opts.out = path.join(opts.outputDirectory, guid + '.'+opts.outputfileformat);
 
-    op.query=query;
+    opts.query=query;
 
     if(opts.remote) {
-        opts.remote = '';
+        op.remote = '';
     }
-
-    _.each(op, function(value, key) {
+    
+    _.each(opts, function(value, key) {
         if(nonBlastOptions.indexOf(key) > -1 || value===false){
             return;
         }
@@ -164,16 +176,23 @@ export function blaster(type, db, query,op:option, cb) {
         optArr.push('-' + key);
         optArr.push(value);
     });
-
-    fs.writeFile(query, queryString, function(err) {
+    //console.log("inputRaw: "+opts.rawInput+ " RawInput: "+opts.rawInput)
+    if(opts.rawInput){
+        fs.writeFile(query, queryString, function(err) {
         if (err) {
             return cb(err);
-        }
-        run(op.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
-            postBlast(err, stdOut, stdError, op, cb);
-        });
+            }
+        run(opts.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
+            postBlast(err, stdOut, stdError, opts, cb);
+            });
 
-    });
+        });
+    }
+    else{
+        run(opts.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
+            postBlast(err, stdOut, stdError, opts, cb);
+            });
+    }
 
 
 }
@@ -202,6 +221,7 @@ export class option implements IOption{
     query:string="";
     perc_identity=100; //Trying to match the sequence exactly
     qcov_hsp_perc=100; //Trying to match the sequence exactly
+    rawInput:boolean=true;
 
 }
 export interface IOption{
@@ -218,6 +238,7 @@ export interface IOption{
     query:string;
     perc_identity:number;
     qcov_hsp_perc:number;
+    rawInput:boolean;
 
 
 }

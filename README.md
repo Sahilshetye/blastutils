@@ -60,7 +60,8 @@ var option={
     outfmt:12,
     query:Nquery,
     remote:false,
-    outputfileformat:"json"
+    outputfileformat:"json",
+    rawInput: true
 }
 
 var Alias={
@@ -114,3 +115,28 @@ blast.blastN(dbPath, query,option, function (err, output) {
    
    callback is passed (err, stdOut, stdErr, fileOut).
 
+## Updates
+### Passing a fasta file directly
+
+### blast n
+```javascript
+var fastaoption={
+    type:"blastn",
+    outputDirectory:path.join(__dirname ,"/results/") ,
+    rawOutput:false,
+    db:path.join(__dirname + '/example'),
+    outfmt:12,
+    query:'/home/LT/shdba/IdeaProjects/blastjs/test/fastatest.fasta',
+    remote:false,
+    outputfileformat:"json",
+    rawInput:false
+}
+
+blast.blastN(dbPath, query,fastaoption, function (err, output) {
+  if(!err){
+    console.log(output);
+  }
+});
+
+```
+* every other thing should  work the same similar to other  commands.
