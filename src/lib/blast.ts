@@ -183,14 +183,20 @@ export function blaster(type, db, query,op:option, cb) {
             return cb(err);
             }
         run(opts.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
-            postBlast(err, stdOut, stdError, opts, cb);
+            fs.unlink(query,(err,cb)=>{
+                postBlast(err, stdOut, stdError, opts, cb);
+            });
+            
             });
 
         });
     }
     else{
         run(opts.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
-            postBlast(err, stdOut, stdError, opts, cb);
+            fs.unlink(query,(err,cb)=>{
+                postBlast(err, stdOut, stdError, opts, cb);
+            });
+            
             });
     }
 
