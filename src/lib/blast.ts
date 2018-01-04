@@ -154,8 +154,11 @@ export function blaster(type, db, query,op:option, cb) {
         // filepath with  correct extension should be passed in the  following  place.
         // query = opts.outputDirectory;
         
-    if(!fs.lstatSync(query).isFile())
-    return cb(new Error("outputDirectory is not valid File or File is not found. Pass the absolute path"));
+    fs.stat(query,(err,data)=>{
+        if(err)
+        return cb(new Error("outputDirectory is not valid File or File is not found. Pass the absolute path"));
+    });
+    
     if(!query.includes(".fasta"))
     return cb (new Error("Please  pass a fasta file, Currently only supports only .fasta file"))
         

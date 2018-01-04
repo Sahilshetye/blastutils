@@ -196,7 +196,7 @@ describe('blast', function () {
             blast.outputString(true);
             //fastaoption.type="blastn";
             //fastaoption.rawInput=false;            
-            blast.blastN(dbPath, fastaoption.query,fastaoption, function (err, output) {
+            blast.blastN(dbPath, path.join(__dirname,'/fastatest1.fasta'),fastaoption, function (err, output) {
                 //console.log(output);
 
                 assert.equal(err.message, "outputDirectory is not valid File or File is not found. Pass the absolute path");
@@ -210,7 +210,7 @@ describe('blast', function () {
             blast.outputString(true);
             //fastaoption.type="blastn";
             //fastaoption.rawInput=false;            
-            blast.blastN(dbPath, fastaoption.query,fastaoption, function (err, output) {
+            blast.blastN(dbPath, path.join(__dirname,'/results/placeholder.txt'),fastaoption, function (err, output) {
                // console.log(output);
                 // console.log(err.message);
                 
