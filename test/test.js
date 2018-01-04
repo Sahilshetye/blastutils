@@ -64,7 +64,7 @@ var fastaoption={
     rawOutput:false,
     db:path.join(__dirname + '/example'),
     outfmt:12,
-    query:'/home/LT/shdba/IdeaProjects/blastjs/test/fastatest.fasta',
+    query:path.join(__dirname,'/fastatest.fasta'),
     remote:false,
     outputfileformat:"json",
     rawInput:false
