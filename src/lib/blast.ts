@@ -73,7 +73,7 @@ export class blast{
          _.merge(op,option);
         // op.dblist=option.dblist;
     // console.log(option.dbtype);
-        var makeCommand=' blastdb_aliastool -dblist "'+op.dblist.join(" ")+'" -dbtype '+op.dbtype+' -out '+path.join(option.directory,option.out)+' -title '+option.title;
+        var makeCommand=' blastdb_aliastool -dblist "'+op.dblist.join(" ")+'" -dbtype '+op.dbtype+' -out "'+path.join(option.directory,option.out)+'" -title '+option.title;
 
         var fileOut = option.out+option.title;
         run(makeCommand, (err, stdOut, stdErr) => {
@@ -161,11 +161,13 @@ export function blaster(type, db, query,op:option, cb) {
     
     if(!query.includes(".fasta"))
     return cb (new Error("Please  pass a fasta file, Currently only supports only .fasta file"))
+
+    query=query;
         
      }
     opts.out = path.join(opts.outputDirectory, guid + '.'+opts.outputfileformat);
 
-    opts.query=query;
+    opts.query="\""+query+"\"";
 
     if(opts.remote) {
         op.remote = '';
@@ -186,9 +188,7 @@ export function blaster(type, db, query,op:option, cb) {
             return cb(err);
             }
         run(opts.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
-            fs.unlink(query,(err,cb)=>{
                 postBlast(err, stdOut, stdError, opts, cb);
-            });
             
             });
 
@@ -196,9 +196,7 @@ export function blaster(type, db, query,op:option, cb) {
     }
     else{
         run(opts.type + ' ' + optArr.join(' '), function(err, stdOut, stdError) {
-            fs.unlink(query,(err,cb)=>{
                 postBlast(err, stdOut, stdError, opts, cb);
-            });
             
             });
     }
@@ -222,7 +220,7 @@ export class option implements IOption{
     outputDirectory:string="/tmp" ;
     rawOutput: boolean=false;
     db: string|boolean="testDB";
-    outfmt: number=13;
+    outfmt: number=15;
     remote?:boolean |string=false ;
     out:string="";
     inputfileformat:string="fasta";
