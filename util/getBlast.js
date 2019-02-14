@@ -28,7 +28,6 @@ var c = new Client();
 c.on('ready', function () {
   c.list(address, function (err, list) {
     if (err) throw err;
-    //console.dir(list);
 
 
     list.forEach(function (l) {

@@ -6,7 +6,6 @@ node_js:
 sudo: true
 
 before_script:
-  - node util/getBlast.js
   - npm install -g typescript --save-dev
   - npm run build
   - npm uninstall typescript
@@ -21,6 +20,8 @@ branches:
 
 install:
   - npm install
+  - node util/getBlast.js
+
 
 cache:
   directories:
