@@ -24,9 +24,9 @@
   },
   "dependencies": {
     "download": "^4.2.0",
-    "fastautil": "^1.1.0",
+    "fastautil": "^1.1.1",
     "ftp": "^0.3.10",
-    "lodash": "^4.16.6",
+    "lodash": "^4.17.11",
     "tar.gz": "1.0.2",
     "uuid": "^2.0.3",
     "xml2js": "^0.4.12"
