@@ -57,7 +57,7 @@ c.connect({host: tt});
 function downloadIt(url) {
   console.log('Downloading', url, '...');
   new Download({mode: '755'})
-    .get('http://' + url) //have to add http to url
+    .get('https://' + url) //have to add http to url
     .dest('bin')
     .run(extractIt);
 }
